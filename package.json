@@ -4,7 +4,9 @@
   "description": "Calorie Counter",
   "main": "server.js",
   "scripts": {
-    "test": "mocha"
+    "test": "NODE_ENV=test mocha test/*-test.js",
+    "start": "nodemon server.js",
+    "debug": "NODE_ENV=test mocha debug test/*-test.js"
   },
   "repository": {
     "type": "git",

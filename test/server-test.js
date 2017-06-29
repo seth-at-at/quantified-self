@@ -1,5 +1,5 @@
-const assert = require('chai').assert
-const app = require('../server')
+const assert  = require('chai').assert
+const app     = require('../server')
 const request = require('request')
 
 describe('Server', () => {
