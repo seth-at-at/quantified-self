@@ -5,7 +5,7 @@ const User       = require('./lib/models/user')
 
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'QS'
-
+app.use(bodyParser.json())
 app.get('/',(request, response) => {
   response.send('It\'s a Calorie Counter!')
 })
@@ -18,6 +18,17 @@ app.get('/api/v1/users/:id', (request, response) => {
 
       response.json(data.rows[0])
     })
+})
+
+app.post('api/v1/users', (request, response) => {
+  let name = request.body.name
+console.log(name);
+  if (!name) {
+    return response.status(422).send({ error: "No name property provided!"})
+  } else {
+    response.status(201).json({name})
+  }
+
 })
 
 if(!module.parent){
