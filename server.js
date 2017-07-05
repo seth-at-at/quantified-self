@@ -1,7 +1,8 @@
 const express    = require('express')
 const app        = express()
 const bodyParser = require('body-parser') //> ability to parse the body of an HTTP request
-const Diary       = require('./lib/models/diary')
+const Diary      = require('./lib/models/diary')
+const Food       = require('./lib/models/food')
 
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'QS'
@@ -29,7 +30,16 @@ app.post('/api/v1/diary', (request, response) => {
   } else {
     response.status(201).json({name})
   }
+})
 
+app.get('/api/v1/foods/:id', (request, response) => {
+  let id = request.params.id
+  Food.find(id)
+  .then( (data) => {
+    if (data.rowCount === 0) { return response.sendStatus(404) }
+
+    response.json(data.rows[0])
+  })
 })
 
 if(!module.parent){
