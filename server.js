@@ -1,18 +1,20 @@
 const express    = require('express')
 const app        = express()
 const bodyParser = require('body-parser') //> ability to parse the body of an HTTP request
-const User       = require('./lib/models/user')
+const Diary       = require('./lib/models/diary')
 
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'QS'
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
 app.get('/',(request, response) => {
   response.send('It\'s a Calorie Counter!')
 })
 
-app.get('/api/v1/users/:id', (request, response) => {
+app.get('/api/v1/diary/:id', (request, response) => {
   let id = request.params.id
-  User.find(id)
+  Diary.find(id)
     .then( (data) => {
       if (data.rowCount === 0) { return response.sendStatus(404) }
 
@@ -20,9 +22,8 @@ app.get('/api/v1/users/:id', (request, response) => {
     })
 })
 
-app.post('api/v1/users', (request, response) => {
+app.post('/api/v1/diary', (request, response) => {
   let name = request.body.name
-console.log(name);
   if (!name) {
     return response.status(422).send({ error: "No name property provided!"})
   } else {

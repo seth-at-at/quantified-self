@@ -1,7 +1,7 @@
 const assert  = require('chai').assert
 const app     = require('../server')
 const request = require('request')
-const User    = require('../lib/models/user')
+const Diary   = require('../lib/models/diary')
 const pry     = require('pryjs')
 
 describe('Server', function() {
@@ -22,21 +22,21 @@ describe('Server', function() {
     this.server.close()
   })
 
-  describe('GET /api/v1/users/:id', function() {
+  describe('GET /api/v1/diary/:id', function() {
     this.timeout(10000)
 
     beforeEach( function(done){
-      User.create("Jarvan IV")
+      Diary.create("Jarvan IV")
         .then( function() { done() })
     })
 
     afterEach( function(done){
-      User.destroyAll()
+      Diary.destroyAll()
         .then( function() { done() })
     })
 
     it('should return a 404 if the resource is not found', function(done){
-      this.request.get('/api/v1/users/200', function(error, response) {
+      this.request.get('/api/v1/diary/200', function(error, response) {
         if (error) { done(error) }
         assert.equal(response.statusCode, 404)
         done()
@@ -45,34 +45,34 @@ describe('Server', function() {
 
     it('should have the id and message from the resource', function(done){
       let ourRequest = this.request
-      User.first()
+      Diary.first()
         .then( function(data) {
           let id = data.rows[0].id
           let name = data.rows[0].name
           let created_at = data.rows[0].created_at
 
-          ourRequest.get(`/api/v1/users/${id}`, function(error, response) {
+          ourRequest.get(`/api/v1/diary/${id}`, function(error, response) {
             if (error) { done(error) }
-            let parsedUser = JSON.parse(response.body)
+            let parsedDiary = JSON.parse(response.body)
 
-            assert.equal(parsedUser.id, id)
-            assert.equal(parsedUser.name, name)
-            assert.ok(parsedUser.created_at, created_at)
+            assert.equal(parsedDiary.id, id)
+            assert.equal(parsedDiary.name, name)
+            assert.ok(parsedDiary.created_at, created_at)
             done()
           })
         })
     })
   })
-  describe('POST /api/v1/users', function() {
-    this.timeout(10000)
+  describe('POST /api/v1/diary', function() {
+    this.timeout(1000000)
 
     afterEach( function(done){
-      User.destroyAll()
+      Diary.destroyAll()
         .then( function() { done() })
     })
 
     it('should not return a 404', function(done){
-      this.request.post('/api/v1/users', function(error, response) {
+      this.request.post('/api/v1/diary', function(error, response) {
         if (error) { done(error) }
 
         assert.notEqual(response.statusCode, 404)
@@ -82,13 +82,18 @@ describe('Server', function() {
 
     it('should receive and store data', function(done){
       let name = {name: 'Brett'}
-      this.request.post('/api/v1/users', {form: name}, function(error, response) {
+      this.request.post('/api/v1/diary', {form: name}, function(error, response) {
+        console.log(response.request.uri.href)
+        
         if (error) { done(error) }
 
-        let parsedUser = JSON.parse(response.body)
-        assert.equal(parsedUser.id, id)
-        assert.equal(parsedUser.name, name)
-        assert.ok(parsedUser.created_at, created_at)
+        let parsedDiary = response
+        // console.log(parsedDiary);
+        // console.log(Diary.findName(parsedDiary.name));
+        // console.log();
+        // assert.equal(parsedDiary.id, id)
+        // assert.equal(parsedDiary, name)
+        // assert.ok(parsedDiary.created_at, created_at)
         done()
       })
     })
