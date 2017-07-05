@@ -1,12 +1,13 @@
 const assert  = require('chai').assert
 const app     = require('../server')
 const request = require('request')
+const pry     = require('pryjs')
 
-describe('Server', () => {
-  before( (done) => {
+describe('Server', function() {
+  before( function(done){
     this.port = 9001
 
-    this.server = app.listen(this.port, (error, result) => {
+    this.server = app.listen(this.port, function(error, result) {
       if (error) { return done(error) }
       done()
     })
@@ -16,18 +17,18 @@ describe('Server', () => {
     })
   })
 
-  after( () => {
+  after( function() {
     this.server.close()
   })
 
-  it('Should exist', (done) => {
+  it('Should exist', function(done){
     assert(app)
     done()
   })
 
-  describe('GET /', () => {
-    it('shoulld return a 200', (done) => {
-      this.request.get('/', (error, response) => {
+  describe('GET /', function() {
+    it('should return a 200', function(done){
+      this.request.get('/', function(error, response) {
         if (error) { done(error) }
         assert.notEqual(response.statusCode, 404)
         assert.equal(response.statusCode, 200)

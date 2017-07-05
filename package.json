@@ -23,11 +23,15 @@
   "homepage": "https://github.com/seth-at-at/quantified-self#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "knex": "^0.13.0",
+    "pg": "^6.4.0",
+    "pryjs": "^1.0.3"
   },
   "devDependencies": {
     "chai": "^4.0.2",
     "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
     "request": "^2.81.0"
   }
 }
