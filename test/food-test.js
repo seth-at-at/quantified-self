@@ -65,4 +65,74 @@ describe('Server', function(){
       })
     })
   })
+
+  describe('GET /api/v1/foods', function() {
+    this.timeout(1000000)
+
+    beforeEach( function(done) {
+      Food.create('pizza', 100)
+      .then( function(){
+        Food.create('banana', 50)
+        .then( function(){ done() })
+      })
+    })
+
+    afterEach( function(done) {
+      Food.destroyAll()
+      .then( function() { done() })
+    })
+
+// Shoud I test for a bad response?
+
+    it('should have the id, name and calories from both foods', function(done){
+      let ourRequest = this.request
+      Food.all()
+      .then( function(data) {
+        let pizzaId = data.rows[0].id
+        let pizzaName = data.rows[0].name
+        let pizzaCalories = data.rows[0].calories
+        let pizzaCreatedAt = data.rows[0].created_at
+        let bananaId = data.rows[1].id
+        let bananaName = data.rows[1].name
+        let bananaCalories = data.rows[1].calories
+        let bananaCreatedAt = data.rows[1].created_at
+
+        ourRequest.get('/api/v1/foods', function(error, response){
+          if (error) { done(error) }
+          let parsedFood = JSON.parse(response.body)
+
+          assert.equal(parsedFood[0].id, pizzaId)
+          assert.equal(parsedFood[0].name, pizzaName)
+          assert.equal(parsedFood[0].calories, pizzaCalories)
+          assert.ok(parsedFood[0].created_at, pizzaCreatedAt)
+          assert.equal(parsedFood[1].id, bananaId)
+          assert.equal(parsedFood[1].name, bananaName)
+          assert.equal(parsedFood[1].calories, bananaCalories)
+          assert.ok(parsedFood[1].created_at, bananaCreatedAt)
+          done()
+        })
+      })
+    })
+
+    describe('POST /api/v1/foods', function() {
+      it('POSTs /api/v1/foods', function(done) {
+        const food = { name: 'apple', calories: 20}
+        const options = {
+          method: 'POST',
+          body: food,
+          json: true,
+          url: '/api/v1/foods'
+        }
+
+        const ourRequest = this.request.post(options, function(error, response, body) {
+          if (error) { done(error) }
+
+          assert.equal(body.name, 'apple')
+          assert.equal(body.calories, 20)
+          done()
+        })
+      })
+    })
+
+  })
 })
