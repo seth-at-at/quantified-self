@@ -84,7 +84,7 @@ describe('Server', function() {
       let name = {name: 'Brett'}
       this.request.post('/api/v1/diary', {form: name}, function(error, response) {
         console.log(response.request.uri.href)
-        
+
         if (error) { done(error) }
 
         let parsedDiary = response
