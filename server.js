@@ -42,6 +42,25 @@ app.get('/api/v1/foods/:id', (request, response) => {
   })
 })
 
+app.get('/api/v1/foods', (request, response) => {
+  Food.all()
+  .then( (data) => {
+    if (data.rowCount === 0) { return response.sendStatus(404) }
+
+    response.json(data.rows)
+  })
+})
+
+app.post('/api/v1/foods', (request, response) => {
+  Food.create(request.body.name, request.body.calories)
+  .then(() => {
+    Food.last()
+    .then(food => {
+      response.json(food.rows[0])
+    })
+  })
+})
+
 if(!module.parent){
   app.listen(app.get('port'), () => {
     console.log(`${app.locals.title} is running on ${app.get('port')}.`)
