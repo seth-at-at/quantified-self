@@ -4,7 +4,7 @@ const request = require('request')
 const Diary   = require('../lib/models/diary')
 const pry     = require('pryjs')
 
-describe('Server', function() {
+describe('Diary Endpoints', function() {
   before( function(done){
     this.port = 9001
 

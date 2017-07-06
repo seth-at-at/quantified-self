@@ -4,7 +4,7 @@ const request = require('request')
 const Food    = require('../lib/models/food')
 const pry     = require('pryjs')
 
-describe('Server', function(){
+describe('Food Endpoints', function(){
   before( function(done){
     this.port = 9001
 
