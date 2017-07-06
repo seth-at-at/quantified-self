@@ -163,6 +163,37 @@ describe('Server', function(){
           done()
         })
       })
+      it('updates the foods name', function(done) {
+        const id = 1
+        const food = { name: 'banana' }
+        const options = {
+          method: 'PUT',
+          body: food,
+          json: true,
+          url: `/api/v1/foods/${id}`
+        }
+        const ourRequest = this.request(options, function(error, response, body) {
+          if (error) { done(error) }
+          assert.equal(body.name, 'banana')
+          done()
+        })
+      })
+
+      it('updates the calories count', function(done) {
+        const id = 1
+        const food = { calories: 15 }
+        const options = {
+          method: 'PUT',
+          body: food,
+          json: true,
+          url: `/api/v1/foods/${id}`
+        }
+        const ourRequest = this.request(options, function(error, response, body) {
+          if (error) { done(error) }
+          assert.equal(body.calories, 15)
+          done()
+        })
+      })
     })
 
     describe('DELETE /api/v1/foods/:id', function() {
@@ -189,7 +220,6 @@ describe('Server', function(){
             if (error) { done(error) }
             Food.all()
             .then( (data) => {
-
             assert.equal(response.statusCode, 200)
             assert.equal(data.rowCount, 2)
             done()
