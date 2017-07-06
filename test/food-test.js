@@ -147,9 +147,9 @@ describe('Server', function(){
         .then( function() { done() })
       })
 
-      it('updates the foods name', function(done) {
+      it('updates the foods name and calories for a food', function(done) {
         const id = 1
-        const food = { name: 'banana' }
+        const food = { name: 'banana', calories: 10 }
         const options = {
           method: 'PUT',
           body: food,
@@ -159,6 +159,7 @@ describe('Server', function(){
         const ourRequest = this.request(options, function(error, response, body) {
           if (error) { done(error) }
           assert.equal(body.name, 'banana')
+          assert.equal(body.calories, 10)
           done()
         })
       })
