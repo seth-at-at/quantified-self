@@ -140,38 +140,7 @@ describe('Server', function() {
     })
   })
 
-  // describe('DELETE', function(){
-  //   beforeEach( function(done){
-  //     Diary.create("Jarvan IV")
-  //       .then( function() { done() })
-  //   })
-  //
-  //   afterEach( function(done){
-  //     Diary.destroyAll()
-  //       .then( function() { done() })
-  //   })
-  //
-  //   it('/diary/:id', function(done){
-  //     let jarvan = Diary.find(1)
-  //
-  //     assert.equal('Jarvan IV', jarvan.name)
-  //
-  //     let options = {
-  //           method: 'DELETE',
-  //           json: true,
-  //           url: '/diary/1'
-  //         };
-  //     this.request.delete(options, function(error, response, body) {
-  //       if (error) { done(error) }
-  //       let isUndef = Diary.find(1)
-  //       assert.equal(isUndef, undefined)
-  //       done()
-  //     })
-  //     done()
-  //   })
-  // })
-
-  describe('meals', () => {
+  describe('diary', () => {
     beforeEach(function(done){
       Diary.create('breakfast')
         .then(() => {
@@ -185,17 +154,45 @@ describe('Server', function() {
       })
 
     it('DELETEs /diary/:id', function(done){
-      const food = { name: 'chicken' }
-      const options = {
-        body: food,
+      let lunch = { name: 'lunch' }
+      let options = {
+        body: lunch,
         json: true,
         url: '/diary/1'
       }
       this.request.delete(options, (error, response, body) => {
         if (error) { done(error) }
 
-        assert.equal(body.length, 1)
-        assert.notEqual(body[0].name, 'chicken')
+        assert.equal(body, undefined)
+        done()
+      })
+    })
+  })
+
+  describe('diary', () => {
+    beforeEach(function(done){
+      Diary.create('breakfast')
+        .then(() => {
+          done()
+        });
+    });
+
+    afterEach( function(done){
+      Diary.destroyAll()
+        .then( function() { done() })
+    })
+
+    it('UPDATES /diary/:id', function(done) {
+      let name = { name: 'lunch' }
+      let options = {
+        body: name,
+        json: true,
+        url: '/diary/1'
+      }
+      this.request.put(options, (error, response, body) => {
+        if (error) { done(error) }
+
+        assert.equal(body.name, "lunch")
         done()
       })
     })

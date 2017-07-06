@@ -37,7 +37,12 @@ app.delete('/api/v1/diary/:id', (request, response) => {
   let diaryId = request.params.id;
   // const foodName = request.body.name;
   // console.log(request.params)
-  Diary.find(diaryId).delete
+  Diary.delete(diaryId)
+    .then( (data) => {
+      if (data.rowCount === 0) { return response.sendStatus(200)}
+
+      response.json(data.rows[0])
+    })
     // .then(diary => {
     //   diary = diary.rows[0];
     //   // Food.findByName(foodName)
@@ -56,7 +61,14 @@ app.delete('/api/v1/diary/:id', (request, response) => {
 
 app.put('/api/v1/diary/:id', (request, response) => {
   let diaryId = request.params.id
-  Diary.find(diaryId).updateName(request.params.name)
+  let diaryName = request.body.name
+
+  Diary.updateName(diaryName, diaryId)
+    .then( (data) => {
+    if (data.rowCount === 0) { return response.sendStatus(404) }
+
+    response.json(data.rows[0])
+  })
 })
 
 
