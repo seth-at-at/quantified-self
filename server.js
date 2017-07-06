@@ -73,6 +73,19 @@ app.put('/api/v1/foods/:id', (request, response) => {
   })
 })
 
+app.delete('/api/v1/foods/:id', (request, response) => {
+  const id = request.params.id
+  Food.deleteFood(id)
+  .then( (data) => {
+    if (data.rowCount === 0) { return response.sendStatus(404) }
+
+    Food.all()
+    .then(foods => {
+      response.json(foods.rows)
+    })
+  })
+})
+
 if(!module.parent){
   app.listen(app.get('port'), () => {
     console.log(`${app.locals.title} is running on ${app.get('port')}.`)
