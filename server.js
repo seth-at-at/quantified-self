@@ -32,6 +32,33 @@ app.post('/api/v1/diary', (request, response) => {
 
 })
 
+
+app.delete('/api/v1/diary/:id', (request, response) => {
+  let diaryId = request.params.id;
+
+  Diary.delete(diaryId)
+    .then( (data) => {
+      if (data.rowCount === 0) { return response.sendStatus(200)}
+
+      Diary.all().then( (data) => {
+        response.json(data.rows)
+      })
+    })
+});
+
+app.put('/api/v1/diary/:id', (request, response) => {
+  let diaryId = request.params.id
+  let diaryName = request.body.name
+
+  Diary.updateName(diaryName, diaryId)
+    .then( (data) => {
+    if (data.rowCount === 0) { return response.sendStatus(404) }
+
+    response.json(data.rows[0])
+  })
+})
+
+
 if(!module.parent){
   app.listen(app.get('port'), () => {
     console.log(`${app.locals.title} is running on ${app.get('port')}.`)
