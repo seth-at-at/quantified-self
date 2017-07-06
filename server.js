@@ -32,6 +32,34 @@ app.post('/api/v1/diary', (request, response) => {
 
 })
 
+
+app.delete('/api/v1/diary/:id', (request, response) => {
+  let diaryId = request.params.id;
+  // const foodName = request.body.name;
+  // console.log(request.params)
+  Diary.find(diaryId).delete
+    // .then(diary => {
+    //   diary = diary.rows[0];
+    //   // Food.findByName(foodName)
+    //   //   .then(food => {
+    //   //     food = food.rows[0];
+    //   //     foodDiary.delete(diary.id, food.id)
+    //   //       .then(() => {
+    //   //         Meal.findFoodsFor(diaryName)
+    //   //           .then(foods => {
+    //   //             response.json(foods.rows);
+    //   //           });
+    //   //       });
+    //   //   });
+    // });
+});
+
+app.put('/api/v1/diary/:id', (request, response) => {
+  let diaryId = request.params.id
+  Diary.find(diaryId).updateName(request.params.name)
+})
+
+
 if(!module.parent){
   app.listen(app.get('port'), () => {
     console.log(`${app.locals.title} is running on ${app.get('port')}.`)
