@@ -124,11 +124,41 @@ describe('Server', function(){
           url: '/api/v1/foods'
         }
 
-        const ourRequest = this.request.post(options, function(error, response, body) {
+        const ourRequest = this.request(options, function(error, response, body) {
           if (error) { done(error) }
 
           assert.equal(body.name, 'apple')
           assert.equal(body.calories, 20)
+          done()
+        })
+      })
+    })
+
+    describe('PUT /api/v1/foods/:id', function() {
+      this.timeout(1000000)
+
+      beforeEach( function(done) {
+        Food.create('pizza', 100)
+          .then( function(){ done() })
+        })
+
+      afterEach( function(done) {
+        Food.destroyAll()
+        .then( function() { done() })
+      })
+
+      it('updates the foods name', function(done) {
+        const id = 1
+        const food = { name: 'banana' }
+        const options = {
+          method: 'PUT',
+          body: food,
+          json: true,
+          url: `/api/v1/foods/${id}`
+        }
+        const ourRequest = this.request(options, function(error, response, body) {
+          if (error) { done(error) }
+          assert.equal(body.name, 'banana')
           done()
         })
       })
