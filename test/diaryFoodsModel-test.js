@@ -9,9 +9,8 @@ describe('diaryFoods model test', function() {
 
   beforeEach(done => {
     Diary.create('testing').then((data) => {
-      console.log(Diary.last());
       Food.create('testing', 93).then((data) => {
-        DiaryFood.create(data.rows, data.rows)
+        DiaryFood.create(1, 1)
           .then(() => done())
       })
     })
@@ -26,9 +25,7 @@ describe('diaryFoods model test', function() {
   })
 
   it('Has a Diary and Food', function(done) {
-    // console.log(DiaryFood.find(1))
     DiaryFood.find(1).then( data => {
-      console.log(data.rows)
       assert.equal(data.rows[0].id, 1)
       assert.equal(data.rows[0].food_id, 1)
       assert.equal(data.rows[0].diary_id, 1)
