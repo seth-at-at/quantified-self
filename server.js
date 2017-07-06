@@ -64,7 +64,8 @@ app.post('/api/v1/foods', (request, response) => {
 app.put('/api/v1/foods/:id', (request, response) => {
   const id = request.params.id
   const name = request.body.name
-  Food.update(name, id)
+  const calories = request.body.calories
+  Food.update(name, calories, id)
   .then( (data) => {
     if (data.rowCount === 0) { return response.sendStatus(404) }
 
