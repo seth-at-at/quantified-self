@@ -35,28 +35,15 @@ app.post('/api/v1/diary', (request, response) => {
 
 app.delete('/api/v1/diary/:id', (request, response) => {
   let diaryId = request.params.id;
-  // const foodName = request.body.name;
-  // console.log(request.params)
+
   Diary.delete(diaryId)
     .then( (data) => {
       if (data.rowCount === 0) { return response.sendStatus(200)}
 
-      response.json(data.rows[0])
+      Diary.all().then( (data) => {
+        response.json(data.rows)
+      })
     })
-    // .then(diary => {
-    //   diary = diary.rows[0];
-    //   // Food.findByName(foodName)
-    //   //   .then(food => {
-    //   //     food = food.rows[0];
-    //   //     foodDiary.delete(diary.id, food.id)
-    //   //       .then(() => {
-    //   //         Meal.findFoodsFor(diaryName)
-    //   //           .then(foods => {
-    //   //             response.json(foods.rows);
-    //   //           });
-    //   //       });
-    //   //   });
-    // });
 });
 
 app.put('/api/v1/diary/:id', (request, response) => {

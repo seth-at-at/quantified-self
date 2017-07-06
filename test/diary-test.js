@@ -163,7 +163,7 @@ describe('Server', function() {
       this.request.delete(options, (error, response, body) => {
         if (error) { done(error) }
 
-        assert.equal(body, undefined)
+        assert.equal(body.name, undefined)
         done()
       })
     })

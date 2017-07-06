@@ -4,15 +4,27 @@ exports.seed = function(knex, Promise) {
     return Promise.all([
       knex.raw(
         'INSERT INTO diary (name, created_at) VALUES (?, ?)',
-        ["Seth", new Date]
+        ["Breakfast", new Date()]
       ),
       knex.raw(
         'INSERT INTO diary (name, created_at) VALUES (?, ?)',
-        ["Brett", new Date]
+        ["Lunch", new Date()]
       ),
       knex.raw(
         'INSERT INTO diary (name, created_at) VALUES (?, ?)',
-        ["Charles", new Date]
+        ["Dinner", new Date()]
+      ),
+      knex.raw(
+        'INSERT INTO diary (name, created_at) VALUES (?, ?)',
+        ["Snacks", new Date()]
+      ),
+      knex.raw(
+        'INSERT INTO diary (name, created_at) VALUES (?, ?)',
+        ["Brunch", new Date()]
+      ),
+      knex.raw(
+        'INSERT INTO diary (name, created_at) VALUES (?, ?)',
+        ["Second Breakfast", new Date()]
       )
     ]);
   });
