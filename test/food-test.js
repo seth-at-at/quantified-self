@@ -165,5 +165,38 @@ describe('Server', function(){
       })
     })
 
+    describe('DELETE /api/v1/foods/:id', function() {
+      this.timeout(1000000)
+
+      beforeEach( function(done) {
+        Food.create('pizza', 100)
+          .then( function(){ done() })
+        })
+
+      afterEach( function(done) {
+        Food.destroyAll()
+        .then( function() { done() })
+      })
+
+      it('deletes the food from the database', function(done) {
+        const id = 1
+        const options = {
+          method: 'DELETE',
+          json: true,
+          url: `/api/v1/foods/${id}`
+        }
+        const ourRequest = this.request(options, function(error, response) {
+            if (error) { done(error) }
+            Food.all()
+            .then( (data) => {
+
+            assert.equal(response.statusCode, 200)
+            assert.equal(data.rowCount, 2)
+            done()
+          })
+        })
+      })
+    })
+
   })
 })
