@@ -202,7 +202,6 @@ describe('Food Endpoints', function(){
         }
         const ourRequest = this.request(options, function(error, response, body) {
           if (error) { done(error) }
-          var pry = require('pryjs'); eval(pry.it);
           assert.equal(body.calories, 15)
           done()
         })
