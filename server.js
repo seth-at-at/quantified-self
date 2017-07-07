@@ -3,6 +3,7 @@ const app        = express()
 const bodyParser = require('body-parser') //> ability to parse the body of an HTTP request
 const Diary      = require('./lib/models/diary')
 const Food       = require('./lib/models/food')
+const DiaryFood  = require('./lib/models/diary_foods')
 
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'QS'
@@ -13,13 +14,22 @@ app.get('/',(request, response) => {
   response.send('It\'s a Calorie Counter!')
 })
 
-app.get('/api/v1/diary/:id', (request, response) => {
-  let id = request.params.id
-  Diary.find(id)
+app.get('/api/v1/diary', (request, response) => {
+  Diary.all()
     .then( (data) => {
       if (data.rowCount === 0) { return response.sendStatus(404) }
 
-      response.json(data.rows[0])
+      response.json(data.rows)
+    })
+})
+
+app.get('/api/v1/diary/:id', (request, response) => {
+  let id = request.params.id
+  Diary.findFoodsFor(id)
+    .then( (data) => {
+      if (data.rowCount === 0) { return response.sendStatus(404) }
+
+      response.json(data.rows)
     })
 })
 
@@ -52,12 +62,25 @@ app.get('/api/v1/foods', (request, response) => {
 })
 
 app.post('/api/v1/foods', (request, response) => {
-  Food.create(request.body.name, request.body.calories)
+  let diaryName = request.body.diary_name
+  let diaryData
+  // console.log();
+  Diary.findByName(diaryName)
+  .then((data) => {
+    diaryData = data
+
+  })
   .then(() => {
+    Food.create(request.body.name, request.body.calories)
+  .then(function(data) {
     Food.last()
-    .then(food => {
+  .then((food) => {
+    DiaryFood.create(diaryData.rows[0].id, food.rows[0].id)
+  .then( (data) => {
       response.json(food.rows[0])
-    })
+  })
+  })
+  })
   })
 })
 

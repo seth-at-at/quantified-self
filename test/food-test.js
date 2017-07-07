@@ -1,8 +1,10 @@
-const assert  = require('chai').assert
-const app     = require('../server')
-const request = require('request')
-const Food    = require('../lib/models/food')
-const pry     = require('pryjs')
+const assert    = require('chai').assert
+const app       = require('../server')
+const request   = require('request')
+const Food      = require('../lib/models/food')
+const Diary     = require('../lib/models/diary')
+const DiaryFood = require('../lib/models/diary_foods')
+const pry       = require('pryjs')
 
 describe('Food Endpoints', function(){
   before( function(done){
@@ -67,12 +69,11 @@ describe('Food Endpoints', function(){
   })
 
   describe('GET /api/v1/foods', function() {
-    this.timeout(1000000)
 
     beforeEach( function(done) {
       Food.create('pizza', 100)
       .then( function(){
-        Food.create('banana', 50)
+        Food.create('banana', 49)
         .then( function(){ done() })
       })
     })
@@ -115,27 +116,36 @@ describe('Food Endpoints', function(){
     })
 
     describe('POST /api/v1/foods', function() {
+      beforeEach( function(done) {
+        Diary.create('Breakfast').then( function(){ done() })
+      })
+
+      afterEach( function(done) {
+        Diary.destroyAll().then( function(){ done() })
+      })
+
       it('POSTs /api/v1/foods', function(done) {
-        const food = { name: 'apple', calories: 20}
-        const options = {
+        let ourRequest = this.request
+        let food = { name: 'apple', calories: 20, diary_name: 'Breakfast'}
+        let options = {
           method: 'POST',
           body: food,
           json: true,
           url: '/api/v1/foods'
         }
 
-        const ourRequest = this.request(options, function(error, response, body) {
+        ourRequest.post(options, function(error, response, body) {
           if (error) { done(error) }
 
           assert.equal(body.name, 'apple')
           assert.equal(body.calories, 20)
           done()
         })
+        done()
       })
     })
 
     describe('PUT /api/v1/foods/:id', function() {
-      this.timeout(1000000)
 
       beforeEach( function(done) {
         Food.create('pizza', 100)
@@ -197,7 +207,6 @@ describe('Food Endpoints', function(){
     })
 
     describe('DELETE /api/v1/foods/:id', function() {
-      this.timeout(1000000)
 
       beforeEach( function(done) {
         Food.create('pizza', 100)
