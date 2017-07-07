@@ -100,16 +100,17 @@ describe('Food Endpoints', function(){
 
         ourRequest.get('/api/v1/foods', function(error, response){
           if (error) { done(error) }
-          let parsedFood = JSON.parse(response.body)
+          let parsedFoods = JSON.parse(response.body)
 
-          assert.equal(parsedFood[0].id, pizzaId)
-          assert.equal(parsedFood[0].name, pizzaName)
-          assert.equal(parsedFood[0].calories, pizzaCalories)
-          assert.ok(parsedFood[0].created_at, pizzaCreatedAt)
-          assert.equal(parsedFood[1].id, bananaId)
-          assert.equal(parsedFood[1].name, bananaName)
-          assert.equal(parsedFood[1].calories, bananaCalories)
-          assert.ok(parsedFood[1].created_at, bananaCreatedAt)
+          assert.equal(parsedFoods.length, 2)
+          assert.equal(parsedFoods[0].id, pizzaId)
+          assert.equal(parsedFoods[0].name, pizzaName)
+          assert.equal(parsedFoods[0].calories, pizzaCalories)
+          assert.ok(parsedFoods[0].created_at, pizzaCreatedAt)
+          assert.equal(parsedFoods[1].id, bananaId)
+          assert.equal(parsedFoods[1].name, bananaName)
+          assert.equal(parsedFoods[1].calories, bananaCalories)
+          assert.ok(parsedFoods[1].created_at, bananaCreatedAt)
           done()
         })
       })
@@ -146,6 +147,7 @@ describe('Food Endpoints', function(){
     })
 
     describe('PUT /api/v1/foods/:id', function() {
+      this.timeout(1000000)
 
       beforeEach( function(done) {
         Food.create('pizza', 100)
@@ -200,6 +202,7 @@ describe('Food Endpoints', function(){
         }
         const ourRequest = this.request(options, function(error, response, body) {
           if (error) { done(error) }
+          var pry = require('pryjs'); eval(pry.it);
           assert.equal(body.calories, 15)
           done()
         })
