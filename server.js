@@ -55,7 +55,7 @@ app.get('/api/v1/foods/:id', (request, response) => {
 app.get('/api/v1/foods', (request, response) => {
   Food.all()
   .then( (data) => {
-    if (data.rowCount === 0) { return response.sendStatus(404) }
+    if (data.rowCount === 0) { return data.rows }
 
     response.json(data.rows)
   })
