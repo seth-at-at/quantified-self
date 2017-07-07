@@ -46,7 +46,7 @@ app.get('/api/v1/foods/:id', (request, response) => {
   let id = request.params.id
   Food.find(id)
   .then( (data) => {
-    if (data.rowCount === 0) { return response.sendStatus(404) }
+    if (data.rowCount === 0) { return response.status(422).send({ error: "No name property provided!"}) }
 
     response.json(data.rows[0])
   })
@@ -55,7 +55,7 @@ app.get('/api/v1/foods/:id', (request, response) => {
 app.get('/api/v1/foods', (request, response) => {
   Food.all()
   .then( (data) => {
-    if (data.rowCount === 0) { return data.rows }
+    if (data.rowCount === 0) { return response.status(422).send({ error: "No foods in the table!"}) }
 
     response.json(data.rows)
   })
