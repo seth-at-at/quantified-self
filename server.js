@@ -64,7 +64,7 @@ app.get('/api/v1/foods', (request, response) => {
 app.post('/api/v1/foods', (request, response) => {
   let diaryName = request.body.diary_name
   let diaryData
-
+  // console.log();
   Diary.findByName(diaryName)
   .then((data) => {
     diaryData = data
@@ -72,15 +72,16 @@ app.post('/api/v1/foods', (request, response) => {
   })
   .then(() => {
     Food.create(request.body.name, request.body.calories)
-  })
-  .then((data) => {
+  .then(function(data) {
     Food.last()
   .then((food) => {
     DiaryFood.create(diaryData.rows[0].id, food.rows[0].id)
-    response.json(food.rows[0])
+  .then( (data) => {
+      response.json(food.rows[0])
   })
   })
-
+  })
+  })
 })
 
 app.put('/api/v1/foods/:id', (request, response) => {

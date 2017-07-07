@@ -66,8 +66,6 @@ describe('Diary Endpoints', function() {
   })
 
   describe('GET /diary/:id', function() {
-    this.timeout(10000)
-
     beforeEach( function(done){
       Diary.create("Jarvan IV")
         .then( function() { done() })
@@ -107,7 +105,6 @@ describe('Diary Endpoints', function() {
   })
 
   describe('POST /diary', function() {
-    // this.timeout(1000000)
 
     afterEach( function(done){
       Diary.destroyAll()
