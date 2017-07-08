@@ -26,7 +26,8 @@
     "express": "^4.15.3",
     "knex": "^0.13.0",
     "pg": "^6.4.0",
-    "pryjs": "^1.0.3"
+    "pryjs": "^1.0.3",
+    "router-express": "^1.5.2"
   },
   "devDependencies": {
     "chai": "^4.0.2",
