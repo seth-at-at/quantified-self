@@ -83,8 +83,6 @@ describe('Food Endpoints', function(){
       .then( function() { done() })
     })
 
-// Shoud I test for a bad response?
-
     it('should have the id, name and calories from both foods', function(done){
       let ourRequest = this.request
       Food.all()
