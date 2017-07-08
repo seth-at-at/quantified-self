@@ -70,7 +70,6 @@ describe('Diary Endpoints', function() {
   })
 
   describe('GET /diary/:id', function() {
-    this.timeout(100000)
     beforeEach( function(done){
       Food.create('pizza', 100)
       .then( function(){
