@@ -4,11 +4,14 @@ const bodyParser = require('body-parser') //> ability to parse the body of an HT
 const Diary      = require('./lib/models/diary')
 const Food       = require('./lib/models/food')
 const DiaryFood  = require('./lib/models/diary_foods')
+var FoodRouter = require('./lib/routers/foodRouter')
 
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'QS'
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use('/api/v1/foods', FoodRouter)
 
 app.get('/',(request, response) => {
   response.send('It\'s a Calorie Counter!')
@@ -52,15 +55,6 @@ app.get('/api/v1/foods/:id', (request, response) => {
       response.json(data.rows[0])
   })
 })
-
-app.get('/api/v1/foods', (request, response) => {
-  Food.all()
-    .then(data => {
-      if (data.rowCount === 0) { return response.status(404).send({ error: "No foods available!"}) }
-
-      response.json(data.rows);
-    });
-});
 
 app.post('/api/v1/foods', (request, response) => {
   let diaryName = request.body.diary_name
