@@ -3,6 +3,7 @@ const app        = express()
 const bodyParser = require('body-parser') //> ability to parse the body of an HTTP request
 const Diary      = require('./lib/models/diary')
 const Food       = require('./lib/models/food')
+const DiaryFood  = require('./lib/models/diary_foods')
 
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'QS'
@@ -13,13 +14,22 @@ app.get('/',(request, response) => {
   response.send('It\'s a Calorie Counter!')
 })
 
-app.get('/api/v1/diary/:id', (request, response) => {
-  let id = request.params.id
-  Diary.find(id)
+app.get('/api/v1/diary', (request, response) => {
+  Diary.all()
     .then( (data) => {
       if (data.rowCount === 0) { return response.sendStatus(404) }
 
-      response.json(data.rows[0])
+      response.json(data.rows)
+    })
+})
+
+app.get('/api/v1/diary/:id', (request, response) => {
+  let id = request.params.id
+  Diary.findFoodsFor(id)
+    .then( (data) => {
+      if (data.rowCount === 0) { return response.sendStatus(404) }
+
+      response.json(data.rows)
     })
 })
 
@@ -27,7 +37,8 @@ app.post('/api/v1/diary', (request, response) => {
   let name = request.body.name
   if (!name) {
     return response.status(422).send({ error: "No name property provided!"})
-  } else {
+  }
+  else {
     response.status(201).json({name})
   }
 })
@@ -35,30 +46,42 @@ app.post('/api/v1/diary', (request, response) => {
 app.get('/api/v1/foods/:id', (request, response) => {
   let id = request.params.id
   Food.find(id)
-  .then( (data) => {
-    if (data.rowCount === 0) { return response.sendStatus(404) }
+    .then( (data) => {
+      if (data.rowCount === 0) { return response.status(404).send({ error: "No name property provided!"}) }
 
-    response.json(data.rows[0])
+      response.json(data.rows[0])
   })
 })
 
 app.get('/api/v1/foods', (request, response) => {
   Food.all()
-  .then( (data) => {
-    if (data.rowCount === 0) { return response.sendStatus(404) }
+    .then(data => {
+      if (data.rowCount === 0) { return response.status(404).send({ error: "No foods available!"}) }
 
-    response.json(data.rows)
-  })
-})
+      response.json(data.rows);
+    });
+});
 
 app.post('/api/v1/foods', (request, response) => {
-  Food.create(request.body.name, request.body.calories)
-  .then(() => {
-    Food.last()
-    .then(food => {
-      response.json(food.rows[0])
+  let diaryName = request.body.diary_name
+  let diaryData
+
+  Diary.findByName(diaryName)
+    .then((data) => {
+      diaryData = data
     })
-  })
+    .then(() => {
+      Food.create(request.body.name, request.body.calories)
+      .then((data) => {
+          Food.last()
+          .then((food) => {
+            DiaryFood.create(diaryData.rows[0].id, food.rows[0].id)
+            .then( (data) => {
+              response.json(food.rows[0])
+            })
+          })
+        })
+      })
 })
 
 app.put('/api/v1/foods/:id', (request, response) => {
@@ -75,7 +98,7 @@ app.put('/api/v1/foods/:id', (request, response) => {
 
 app.delete('/api/v1/foods/:id', (request, response) => {
   const id = request.params.id
-  Food.deleteFood(id)
+  Food.inactivateById(id)
   .then( (data) => {
     if (data.rowCount === 0) { return response.sendStatus(404) }
 
@@ -106,9 +129,9 @@ app.put('/api/v1/diary/:id', (request, response) => {
 
   Diary.updateName(diaryName, diaryId)
     .then( (data) => {
-    if (data.rowCount === 0) { return response.sendStatus(404) }
+      if (data.rowCount === 0) { return response.sendStatus(404) }
 
-    response.json(data.rows[0])
+      response.json(data.rows[0])
   })
 })
 
