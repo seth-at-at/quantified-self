@@ -3,7 +3,9 @@ const app        = express()
 const bodyParser = require('body-parser') //> ability to parse the body of an HTTP request
 const Diary      = require('./lib/models/diary')
 const Food       = require('./lib/models/food')
+const cors = require('cors');
 
+app.use(cors({origin: '*'}))
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'QS'
 app.use(bodyParser.json())
