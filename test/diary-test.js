@@ -1,8 +1,12 @@
-const assert  = require('chai').assert
-const app     = require('../server')
-const request = require('request')
-const Diary   = require('../lib/models/diary')
-const pry     = require('pryjs')
+const assert    = require('chai').assert
+const app       = require('../server')
+const request   = require('request')
+const Diary     = require('../lib/models/diary')
+const DiaryFood = require('../lib/models/diary_foods')
+const Food      = require('../lib/models/food')
+const pry       = require('pryjs')
+
+
 
 describe('Diary Endpoints', function() {
   before( function(done){
@@ -66,16 +70,26 @@ describe('Diary Endpoints', function() {
   })
 
   describe('GET /diary/:id', function() {
-    this.timeout(10000)
-
     beforeEach( function(done){
-      Diary.create("Jarvan IV")
-        .then( function() { done() })
-    })
+      Food.create('pizza', 100)
+      .then( function(){
+        Diary.create("Jarvan IV")
+        .then( function(){
+          DiaryFood.create(1, 1)
+          .then( function() { done() })
+          })
+        })
+      })
 
     afterEach( function(done){
       Diary.destroyAll()
-        .then( function() { done() })
+      .then( function(){
+        Food.destroyAll()
+        .then( function(){
+          DiaryFood.empty()
+          .then( function() { done() })
+        })
+      })
     })
 
     it('should return a 404 if the resource is not found', function(done){
@@ -88,18 +102,22 @@ describe('Diary Endpoints', function() {
 
     it('should have the id and message from the resource', function(done){
       let ourRequest = this.request
-      Diary.find(1)
+      Food.first()
         .then( function(data) {
           let id = data.rows[0].id
           let name = data.rows[0].name
+          let calories = data.rows[0].calories
           let created_at = data.rows[0].created_at
+
           ourRequest.get(`/diary/${id}`, function(error, response) {
             if (error) { done(error) }
+
             let parsedDiary = JSON.parse(response.body)
 
-            assert.equal(parsedDiary.id, id)
-            assert.equal(parsedDiary.name, name)
-            assert.ok(parsedDiary.created_at, created_at)
+            assert.equal(parsedDiary[0].id, id)
+            assert.equal(parsedDiary[0].name, name)
+            assert.equal(parsedDiary[0].calories, calories)
+            assert.ok(parsedDiary[0].created_at, created_at)
             done()
           })
         })
@@ -107,7 +125,6 @@ describe('Diary Endpoints', function() {
   })
 
   describe('POST /diary', function() {
-    // this.timeout(1000000)
 
     afterEach( function(done){
       Diary.destroyAll()
