@@ -135,19 +135,13 @@ describe('Food Endpoints', function(){
   })
 
   describe('POST /api/v1/foods', function() {
-    beforeEach( function(done) {
-      Diary.create('Breakfast').then( function() { done() })
-    })
 
     afterEach( function(done) {
-      Diary.destroyAll()
-        .then( function() {
       Food.destroyAll().then(function() { done() })
-      })
     })
 
     it('POSTs /api/v1/foods', function(done) {
-      let food = { name: 'apple', calories: 20, diary_name: 'Breakfast'}
+      let food = { name: 'apple', calories: 20}
       let options = {
         method: 'POST',
         body: food,
