@@ -1,6 +1,6 @@
 # Quantified Self
 
-### Team Members: Jonathan Kidd & Lauren Oliveri
+### Team Members: Brett Schwartz and Seth Moser
 
 ## API Endpoints
 
@@ -16,24 +16,21 @@ Returns index of all active foods:
 [
     {
         "id": 1,
-        "name": "Orange",
+        "name": "Apple",
         "calories": 90,
         "created_at": "2017-07-09T22:39:37.799Z",
-        "status": "active"
     },
     {
         "id": 2,
-        "name": "Banana",
+        "name": "Pear",
         "calories": 105,
         "created_at": "2017-07-09T22:39:37.799Z",
-        "status": "active"
     },
     {
         "id": 3,
-        "name": "Garden Salsa Sunchips",
+        "name": "Banana",
         "calories": 300,
         "created_at": "2017-07-09T22:39:37.799Z",
-        "status": "active"
     }
 ]
 
@@ -51,7 +48,6 @@ Returns details for a single food item:
     "name": "Orange",
     "calories": 90,
     "created_at": "2017-07-09T22:39:37.799Z",
-    "status": "active"
 }
 ```
 
@@ -59,10 +55,9 @@ Returns details for a single food item:
 
 `POST /api/foods?name=[]&calories=[]`
 
-Will create a new food and return the index with all foods:
+Will create a new food and return the food:
 
 ```
-[
     {
         "id": 1,
         "name": "Orange",
@@ -70,67 +65,22 @@ Will create a new food and return the index with all foods:
         "created_at": "2017-07-09T22:39:37.799Z",
         "status": "active"
     },
-    {
-        "id": 2,
-        "name": "Banana",
-        "calories": 105,
-        "created_at": "2017-07-09T22:39:37.799Z",
-        "status": "active"
-    },
-    {
-        "id": 3,
-        "name": "Garden Salsa Sunchips",
-        "calories": 300,
-        "created_at": "2017-07-09T22:39:37.799Z",
-        "status": "active"
-    },
-    {
-        "id": 4,
-        "name": "Pretzels",
-        "calories": 200,
-        "created_at": "2017-07-09T22:56:06.481Z",
-        "status": "active"
-    }
-]
 ```
 
 #### Update an Existing Food
 
 `PUT /api/foods/:id?name=[]&calories=[]`
 
-Will update an existing food and return the index with all foods:
+Will update an existing food and return the updated food:
 
 ```
-[
     {
         "id": 1,
         "name": "Orange",
         "calories": 90,
         "created_at": "2017-07-09T22:39:37.799Z",
         "status": "active"
-    },
-    {
-        "id": 2,
-        "name": "Banana",
-        "calories": 105,
-        "created_at": "2017-07-09T22:39:37.799Z",
-        "status": "active"
-    },
-    {
-        "id": 3,
-        "name": "Garden Salsa Sunchips",
-        "calories": 300,
-        "created_at": "2017-07-09T22:39:37.799Z",
-        "status": "active"
-    },
-    {
-        "id": 4,
-        "name": "Pretzels",
-        "calories": 150,
-        "created_at": "2017-07-09T22:56:06.481Z",
-        "status": "active"
     }
-]
 ```
 
 #### Delete a Food
@@ -157,7 +107,7 @@ Will 'inactivate' an existing food by its id and return the current index with a
     },
     {
         "id": 3,
-        "name": "Garden Salsa Sunchips",
+        "name": "Pear",
         "calories": 300,
         "created_at": "2017-07-09T22:39:37.799Z",
         "status": "active"
